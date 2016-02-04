@@ -10,6 +10,7 @@
   "dependencies": {
     "express": "^4.13.4",
     "express-markdown-browser": "0.0.2",
-    "jade": "^1.11.0"
+    "jade": "^1.11.0",
+    "marked": "^0.3.5"
   }
 }
