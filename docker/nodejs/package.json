@@ -1,0 +1,15 @@
+{
+  "name": "onduty24",
+  "version": "1.0.0",
+  "description": "onduty24 web app",
+  "author": "reachlin<reachlin@gmail.com>",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.13.4",
+    "express-markdown-browser": "0.0.2",
+    "jade": "^1.11.0"
+  }
+}
