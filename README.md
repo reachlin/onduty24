@@ -1,3 +1,3 @@
 # onduty24
 
-A system provides runbooks and tools integrated for IT onduty tasks.
+Neural Network Analysis on PagerDuty incident data.
