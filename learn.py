@@ -10,38 +10,20 @@ import urllib
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.python.platform import gfile
 
-
-def load_convert_csv_without_header(filename):
-  """Load dataset from CSV file without a header row."""
-  target_column = 0
-  target_dtype = np.int
-  features_dtype = np.int
-  with gfile.Open(filename) as csv_file:
-    data_file = csv.reader(csv_file)
-    data, target = [], []
-    for row in data_file:
-      target.append(row.pop(target_column))
-      # merge row as a giant string then convert to a list of ASCII int
-      row_int = []
-      for item in row:
-        for char in item:
-          row_int.append(ord(char))
-      # max 10k
-      row_int.extend([0]*(10000-len(row_int)))
-      data.append(row_int)
-
-    target = np.array(target, dtype=target_dtype)
-    import pdb; pdb.set_trace()
-    ndata = np.asmatrix(data, dtype=features_dtype)
-
-    return tf.contrib.learn.datasets.base.Dataset(data=ndata, target=target)
 
 def main():
   # Load datasets.
-  training_set = load_convert_csv_without_header("data/small.csv")
-  test_set = load_convert_csv_without_header("data/test.csv")
+  training_set = tf.contrib.learn.datasets.base.load_csv_without_header(
+    filename="data/train.csv",
+    target_dtype=np.int,
+    features_dtype=np.int,
+    target_column=0)
+  test_set = tf.contrib.learn.datasets.base.load_csv_without_header(
+    filename="data/test.csv",
+    target_dtype=np.int,
+    features_dtype=np.int,
+    target_column=0)
 
   # Specify that all features have real-value data
   feature_columns = [tf.contrib.layers.real_valued_column("", dimension=10000)]
@@ -49,7 +31,7 @@ def main():
   # Build 3 layer DNN with 10, 20, 10 units respectively.
   classifier = tf.contrib.learn.DNNClassifier(feature_columns=feature_columns,
                                               hidden_units=[10, 20, 10],
-                                              n_classes=4,
+                                              n_classes=3, #green, yellow, red
                                               model_dir="data/pd_model")
   # Define the training inputs
   def get_train_inputs():
