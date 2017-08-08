@@ -17,7 +17,7 @@ def query_incident(pager, services, csvfile):
   for incident in incidents:
     title = incident.title.replace(",", " ")
     incident_str = "%s %s" % (incident.service.id, title)
-    print incident_str
+    print "ID: %s TITLE: %s" % (incident.id, incident_str)
     incident_list.append(incident_str)
   incident_list.sort()
   incident_list_str = ",".join(incident_list)
@@ -33,7 +33,9 @@ def main():
   parser = argparse.ArgumentParser()
   parser.add_argument("--key", help="PagerDuty API Key", required=True)
   parser.add_argument("--policy", help="PagerDuty policy to monitor", required=True)
-  parser.add_argument("--csv", help="Output csv file", required=True)
+  parser.add_argument("--csv", help="Output csv file", default="/tmp/pd.csv", required=False)
+  parser.add_argument("--loop", help="loop times", required=False, type=int)
+  parser.add_argument("--sleep", help="sleep in seconds", default=600, required=False, type=int)
   args = parser.parse_args()
 
   pager = pygerduty.v2.PagerDuty(args.key)
@@ -44,11 +46,14 @@ def main():
     service_to_query.append(service.id)
 
   with open(args.csv, 'a') as csvfile:
+    loops = 0
     while True:
-      print "querying..."
+      print "%d/%s querying..." % (loops, args.loop)
       query_incident(pager, service_to_query, csvfile)
-      time.sleep(600)
-
+      time.sleep(args.sleep)
+      loops += 1
+      if (args.loop is not None) and loops >= args.loop:
+        break 
 
 if __name__ == "__main__":
   main()
